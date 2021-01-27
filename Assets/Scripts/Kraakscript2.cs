@@ -5,6 +5,7 @@ using UnityEngine;
 public class Kraakscript2 : MonoBehaviour
 {
     public GameObject cameraGO;
+    protected Animator animator;
 
     public float InitialVelocity = 40f;
 
@@ -29,8 +30,8 @@ public class Kraakscript2 : MonoBehaviour
     
     public float rotationSpeed = 120f;//degrees per second
 
-    //public float minSpeed = 20f;//minimum amount of speed you can fly with  KANSKE INTE SKA ANVÄNDAS???, BORDE ISÅFALL FIXA SÅ MAN FALLER OM MAN HAR FÖR LITE FART ELLER NÅT.
-
+    public float fwdMomentum = 2f;//used to determin how quickly you change direction after turning
+    public float turnMomentum = 1f;//bad names i know...
 
     protected bool facingRight = true;//facingRight = true betyder att fågeln inte är upp och ner när den tittar högerut asså, använd för att hitta upåtvektor
     protected Vector3 velocity;
@@ -61,6 +62,7 @@ public class Kraakscript2 : MonoBehaviour
     void Start()
     {
         velocity = new Vector3(InitialVelocity, 0);
+        animator = GetComponent<Animator>();
     }
 
 
@@ -69,6 +71,7 @@ public class Kraakscript2 : MonoBehaviour
         if(flapTimer <= 0)
         {
             flapping = true;
+            animator.SetBool("flaxar", true);
             if (diving)
                 StopDive();
         }
@@ -79,6 +82,7 @@ public class Kraakscript2 : MonoBehaviour
         if (flapping)
         {
             flapping = false;
+            animator.SetBool("flaxar", false);
             flapTimer = flappingCooldown;
         }
     }
@@ -86,6 +90,7 @@ public class Kraakscript2 : MonoBehaviour
     public void StartDive()
     {
         diving = true;
+        animator.SetBool("dyker", true);
         if (flapping)
             StopFlapping();
     }
@@ -93,6 +98,7 @@ public class Kraakscript2 : MonoBehaviour
     public void StopDive()
     {
         diving = false;
+        animator.SetBool("dyker", false);
 
         float magnitudeBefore = velocity.magnitude;
         
@@ -157,7 +163,8 @@ public class Kraakscript2 : MonoBehaviour
         if (!diving)
         {
             //angle velocity where bird is pointing
-            velocity = (velocity + velocity.magnitude * forwardVector) * .5f;
+            velocity = (fwdMomentum * velocity + turnMomentum * velocity.magnitude * forwardVector)/(fwdMomentum + turnMomentum);
+
             //apply gravity-forces
             velocity += forwardVector * -gravity * forwardVector.y * dT;
         }
@@ -176,7 +183,7 @@ public class Kraakscript2 : MonoBehaviour
             }
         }
 
-        //apply drag
+        //apply drag, exponential to limit maxspeed
         velocity -= (velocity * currentDrag) * (velocity.magnitude * currentDrag) * dT;
 
         //move the transform by velocity
@@ -185,6 +192,6 @@ public class Kraakscript2 : MonoBehaviour
         //reset rotation
         rotationDirection = 0;
 
-        cameraGO.transform.localRotation = new Quaternion(0, 0, -transform.rotation.z, transform.rotation.w);
+        cameraGO.transform.localRotation = new Quaternion(0, 0, transform.rotation.z, -transform.rotation.w);
     }
 }

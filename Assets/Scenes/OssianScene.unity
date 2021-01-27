@@ -12097,17 +12097,37 @@ PrefabInstance:
     - target: {fileID: 3853850786482268087, guid: bd798c7e1ad85404eb227dd589b6c09f,
         type: 3}
       propertyPath: gravity
-      value: 10
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3853850786482268087, guid: bd798c7e1ad85404eb227dd589b6c09f,
+        type: 3}
+      propertyPath: wingDrag
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 3853850786482268087, guid: bd798c7e1ad85404eb227dd589b6c09f,
+        type: 3}
+      propertyPath: fwdMomentum
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3853850786482268087, guid: bd798c7e1ad85404eb227dd589b6c09f,
         type: 3}
       propertyPath: diveBoostSpeed
-      value: 150
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3853850786482268087, guid: bd798c7e1ad85404eb227dd589b6c09f,
         type: 3}
       propertyPath: InitialVelocity
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3853850786482268087, guid: bd798c7e1ad85404eb227dd589b6c09f,
+        type: 3}
+      propertyPath: flappingCooldown
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3853850786482268087, guid: bd798c7e1ad85404eb227dd589b6c09f,
+        type: 3}
+      propertyPath: energyRegeneration
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3853850786482268087, guid: bd798c7e1ad85404eb227dd589b6c09f,
         type: 3}
@@ -12117,7 +12137,7 @@ PrefabInstance:
     - target: {fileID: 3853850786482268087, guid: bd798c7e1ad85404eb227dd589b6c09f,
         type: 3}
       propertyPath: flappingAcceleration
-      value: 40
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3853850786482268088, guid: bd798c7e1ad85404eb227dd589b6c09f,
         type: 3}
@@ -12174,6 +12194,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3853850786482268090, guid: bd798c7e1ad85404eb227dd589b6c09f,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 5f9cc53b00e76f24284ee7c9a7ff46d3, type: 2}
     - target: {fileID: 3853850786482268091, guid: bd798c7e1ad85404eb227dd589b6c09f,
         type: 3}
       propertyPath: m_Name
