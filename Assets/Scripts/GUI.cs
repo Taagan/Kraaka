@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GUI : MonoBehaviour
 {
-    public 
+    public int moralMeter;
+    public int Energy;
 
 
     // Start is called before the first frame update

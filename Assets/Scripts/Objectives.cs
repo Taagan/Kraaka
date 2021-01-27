@@ -6,103 +6,62 @@ using UnityEngine.UI;
 
 public class Objectives : MonoBehaviour
 {
-    public GameObject canvas;
-    public Toggle topToggle;
-    private List<Toggle> objectives;
-    
+    public GameObject topToggle;
+    public GameObject midToggle;
+    public GameObject botToggle;
 
+    private List<GameObject> toggles;
+    private int toggleIndex = 0;
     // Start is called before the first frame update
     void Start()
     {
-        objectives = new List<Toggle>();
+        toggles = new List<GameObject>();
+        toggles.Add(topToggle);
+        toggles.Add(midToggle);
+        toggles.Add(botToggle);
+        foreach (GameObject t in toggles)
+        {
+            t.GetComponent<Toggle>().interactable = false;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-
-
+        if (toggleIndex >= toggles.Count)
+        {
+            toggleIndex = 0;
+            foreach (GameObject t in toggles)
+            {
+                MakeToggleInvis(t);
+            }
+        }
+        if (Input.GetKeyDown("space"))
+        {
+            ChangeToggleText(toggles[toggleIndex], "Hi my name is boo");
+            toggleIndex++;
+        }
     }
 
 
-
-
-    public void AddObjective(string text,Image image)
+    void ChangeToggleText(GameObject toggle, string text)
     {
-        GameObject toggle = CreateToggle(canvas);
-        GameObject bg = CreateBackground(toggle);
-        GameObject checkMark = CreateCheckmark(bg);
-        GameObject label = CreateLabel(toggle);
-        FinalizeToggle(toggle, bg, checkMark, label,text);
+        toggle.GetComponentInChildren<Text>().text = text;
+        MakeToggleVisible(toggle);
     }
 
-
-    GameObject CreateToggle(GameObject canvas)
+    void MakeToggleInvis(GameObject target)
     {
-        GameObject toggle = new GameObject("Toggle");
-        toggle.transform.SetParent(canvas.transform);
-        toggle.layer = LayerMask.NameToLayer("UI");
-        return toggle;
+        target.active = false;
     }
 
-    GameObject CreateBackground(GameObject toggle)
+    void MakeToggleVisible(GameObject target)
     {
-        GameObject bg = new GameObject("Background");
-        bg.transform.SetParent(toggle.transform);
-        bg.layer = LayerMask.NameToLayer("UI");
-        return bg;
+        target.active = true;
     }
 
-    GameObject CreateCheckmark(GameObject bg)
+    void ObjectiveComplete(GameObject objective)
     {
-        GameObject chmk = new GameObject("Checkmark");
-        chmk.transform.SetParent(bg.transform);
-        chmk.layer = LayerMask.NameToLayer("UI");
-        return chmk;
+        MakeToggleVisible(objective);
     }
-
-    GameObject CreateLabel(GameObject toggle)
-    {
-        GameObject lbl = new GameObject("Label");
-        lbl.transform.SetParent(toggle.transform);
-        lbl.layer = LayerMask.NameToLayer("UI");
-        return lbl;
-    }
-
-    void FinalizeToggle(GameObject toggle, GameObject bg, GameObject chmk, GameObject lbl, string objectiveText)
-    {
-        Text txt = lbl.AddComponent<Text>();
-        txt.text = objectiveText;
-        Font arialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
-        txt.font = arialFont;
-        txt.lineSpacing = 1;
-        txt.color = new Color(50 / 255, 50 / 255, 50 / 255, 255 / 255);
-        RectTransform txtRect = txt.GetComponent<RectTransform>();
-        txtRect.anchorMin = new Vector2(0, 0);
-        txtRect.anchorMax = new Vector2(1, 1);
-
-        Image chmkImage = chmk.AddComponent<Image>();
-        chmkImage.sprite = (Sprite)AssetDatabase.GetBuiltinExtraResource(typeof(Sprite), "UI/Skin/Checkmark.psd");
-        chmkImage.type = Image.Type.Simple;
-
-
-        Image bgImage = bg.AddComponent<Image>();
-        bgImage.sprite = (Sprite)AssetDatabase.GetBuiltinExtraResource(typeof(Sprite), "UI/Skin/UISprite.psd");
-        bgImage.type = Image.Type.Sliced;
-        RectTransform bgRect = txt.GetComponent<RectTransform>();
-        bgRect.anchorMin = new Vector2(0, 1);
-        bgRect.anchorMax = new Vector2(0, 1);
-
-        Toggle toggleComponent = toggle.AddComponent<Toggle>();
-        toggleComponent.transition = Selectable.Transition.ColorTint;
-        toggleComponent.targetGraphic = bgImage;
-        toggleComponent.isOn = true;
-        toggleComponent.toggleTransition = Toggle.ToggleTransition.Fade;
-        toggleComponent.graphic = chmkImage;
-        toggle.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(0, 0, 0);
-    }
-
-
-
-
 }
