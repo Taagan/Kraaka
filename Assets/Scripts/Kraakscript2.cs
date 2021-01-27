@@ -5,6 +5,7 @@ using UnityEngine;
 public class Kraakscript2 : MonoBehaviour
 {
     public GameObject cameraGO;
+    protected Animator animator;
 
     public float InitialVelocity = 40f;
 
@@ -61,6 +62,7 @@ public class Kraakscript2 : MonoBehaviour
     void Start()
     {
         velocity = new Vector3(InitialVelocity, 0);
+        animator = GetComponent<Animator>();
     }
 
 
@@ -69,6 +71,7 @@ public class Kraakscript2 : MonoBehaviour
         if(flapTimer <= 0)
         {
             flapping = true;
+            animator.SetBool("flaxar", true);
             if (diving)
                 StopDive();
         }
@@ -79,6 +82,7 @@ public class Kraakscript2 : MonoBehaviour
         if (flapping)
         {
             flapping = false;
+            animator.SetBool("flaxar", false);
             flapTimer = flappingCooldown;
         }
     }
@@ -86,6 +90,7 @@ public class Kraakscript2 : MonoBehaviour
     public void StartDive()
     {
         diving = true;
+        animator.SetBool("dyker", true);
         if (flapping)
             StopFlapping();
     }
@@ -93,6 +98,7 @@ public class Kraakscript2 : MonoBehaviour
     public void StopDive()
     {
         diving = false;
+        animator.SetBool("dyker", false);
 
         float magnitudeBefore = velocity.magnitude;
         
