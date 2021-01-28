@@ -117,17 +117,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraGO: {fileID: 3853850786986874811}
   InitialVelocity: 20
-  wingDrag: 0.05
+  wingDrag: 0.1
   diveDrag: 0.01
-  flappingAcceleration: 40
-  flappingEnergyCost: 100
+  flappingAcceleration: 20
+  flappingEnergyCost: 25
   flappingCooldown: 1
   maxEnergy: 100
   energyRegeneration: 100
-  diveBoostSpeed: 150
+  diveBoostSpeed: 50
   diveBoostCooldown: 2
-  gravity: 10
+  gravity: 20
   rotationSpeed: 360
+  fwdMomentum: 5
+  turnMomentum: 0.5
 --- !u!1 &3853850786986874811
 GameObject:
   m_ObjectHideFlags: 0
