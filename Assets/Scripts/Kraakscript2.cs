@@ -6,6 +6,10 @@ public class Kraakscript2 : MonoBehaviour
 {
     public GameObject cameraGO;
     protected Animator animator;
+    protected SpriteRenderer spriteRenderer;
+
+    public float healthPoints = 100;
+    public float maxHealthPoints = 100;
 
     public float InitialVelocity = 40f;
 
@@ -18,7 +22,8 @@ public class Kraakscript2 : MonoBehaviour
 
     public float maxEnergy = 100f;
     public float energyRegeneration = 100f;//energy recovered per second
-    protected float currentEnergy = 100f;
+    [HideInInspector]
+    public float currentEnergy = 100f;
 
     public float diveBoostSpeed = 100f;//speedbost gotten when exiting dive
     public float diveBoostCooldown = 2f;//seconds between dive boost being accessible
@@ -32,6 +37,10 @@ public class Kraakscript2 : MonoBehaviour
 
     public float fwdMomentum = 2f;//used to determin how quickly you change direction after turning
     public float turnMomentum = 1f;//bad names i know...
+
+    public float minSpeedAutoTurningThreshold = 20f;//speed which when the bird is under it starts to automatically turn downwards.
+    public float autoTurnMaxStrength = 540; //degrees per second it rotates automatically downwards when slow.
+    public float autoTurningMinAngleThreshold = 5f;//angle from bottom which it stops autoturning.
 
     protected bool facingRight = true;//facingRight = true betyder att fågeln inte är upp och ner när den tittar högerut asså, använd för att hitta upåtvektor
     protected Vector3 velocity;
@@ -47,7 +56,8 @@ public class Kraakscript2 : MonoBehaviour
     protected sbyte rotationDirection = 0;//-1 = höger, 0 = stilla, +1 = vänster
 
     protected float rotationCoefficient = 1;//implement later, possible changes in speed of rotation depending on speed and if diving etc..
-
+    
+    public bool DEBUG_ARROWS = false;
 
     /*
      * KORT BESKRIVNING HÄR ASSÅ:
@@ -63,6 +73,7 @@ public class Kraakscript2 : MonoBehaviour
     {
         velocity = new Vector3(InitialVelocity, 0);
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
 
@@ -124,10 +135,6 @@ public class Kraakscript2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Move keyboard controlls out maybe, if ai controllers are desireable
-        #region keyboard controlls
-        #endregion
-
         float dT = Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.Z))//start flapping
@@ -158,18 +165,50 @@ public class Kraakscript2 : MonoBehaviour
         if (flapTimer > 0)
             flapTimer -= dT;
 
+        //rotation
+
         transform.Rotate(new Vector3(0, 0, 1), rotationCoefficient*rotationSpeed * rotationDirection * dT);
-        
+
+        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z % 360);
+
+        if (transform.rotation.eulerAngles.z > 90 && transform.rotation.eulerAngles.z <= 270)
+        {
+            facingRight = false;
+            if (!spriteRenderer.flipY)
+                spriteRenderer.flipY = true;
+        }
+        else
+        {
+            facingRight = true;
+            if (spriteRenderer.flipY)
+                spriteRenderer.flipY = false;
+        }
+
         if (!diving)
         {
             //angle velocity where bird is pointing
             velocity = (fwdMomentum * velocity + turnMomentum * velocity.magnitude * forwardVector)/(fwdMomentum + turnMomentum);
+
+           
+
+            if(velocity.magnitude < minSpeedAutoTurningThreshold && !(transform.eulerAngles.z > 270 - autoTurningMinAngleThreshold && transform.eulerAngles.z < 270 + autoTurningMinAngleThreshold))
+            {
+                float autoTurningMagnitude = 1 - (velocity.magnitude / minSpeedAutoTurningThreshold);
+
+                Debug.Log(autoTurningMagnitude);
+
+                if (facingRight)
+                    autoTurningMagnitude *= -1;
+
+                transform.Rotate(0, 0, autoTurnMaxStrength * autoTurningMagnitude * dT);
+            }
 
             //apply gravity-forces
             velocity += forwardVector * -gravity * forwardVector.y * dT;
         }
         else if (diving)
             velocity.y -= gravity * dT;
+
 
         if (flapping)
         {
@@ -193,5 +232,17 @@ public class Kraakscript2 : MonoBehaviour
         rotationDirection = 0;
 
         cameraGO.transform.localRotation = new Quaternion(0, 0, transform.rotation.z, -transform.rotation.w);
+
+
+        #region debug
+
+        if (DEBUG_ARROWS)
+        {
+            Debug.DrawLine(transform.position, transform.position + forwardVector, Color.red);
+            Debug.DrawLine(transform.position, transform.position + upVector, Color.blue);
+        }
+
+
+        #endregion
     }
 }
