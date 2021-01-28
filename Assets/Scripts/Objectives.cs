@@ -10,6 +10,10 @@ public class Objectives : MonoBehaviour
     public GameObject midToggle;
     public GameObject botToggle;
 
+    public string topObjective;
+    public string midObjective;
+    public string botObjective;
+
     private List<GameObject> toggles;
     private int toggleIndex = 0;
     // Start is called before the first frame update
@@ -22,25 +26,18 @@ public class Objectives : MonoBehaviour
         foreach (GameObject t in toggles)
         {
             t.GetComponent<Toggle>().interactable = false;
+            t.GetComponent<Toggle>().isOn = false;
         }
+
+        ChangeToggleText(topToggle, topObjective);
+        ChangeToggleText(midToggle, midObjective);
+        ChangeToggleText(botToggle, botObjective);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (toggleIndex >= toggles.Count)
-        {
-            toggleIndex = 0;
-            foreach (GameObject t in toggles)
-            {
-                MakeToggleInvis(t);
-            }
-        }
-        if (Input.GetKeyDown("space"))
-        {
-            ChangeToggleText(toggles[toggleIndex], "Hi my name is boo");
-            toggleIndex++;
-        }
     }
 
 
@@ -60,8 +57,8 @@ public class Objectives : MonoBehaviour
         target.active = true;
     }
 
-    void ObjectiveComplete(GameObject objective)
+    void ObjectiveComplete(Toggle objective)
     {
-        MakeToggleVisible(objective);
+        objective.isOn = true;
     }
 }
