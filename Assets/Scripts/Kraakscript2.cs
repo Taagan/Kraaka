@@ -18,7 +18,8 @@ public class Kraakscript2 : MonoBehaviour
 
     public float maxEnergy = 100f;
     public float energyRegeneration = 100f;//energy recovered per second
-    protected float currentEnergy = 100f;
+    [HideInInspector]
+    public float currentEnergy = 100f;
 
     public float diveBoostSpeed = 100f;//speedbost gotten when exiting dive
     public float diveBoostCooldown = 2f;//seconds between dive boost being accessible
