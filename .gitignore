@@ -73,3 +73,8 @@ Library/CurrentLayout-default.dwlt
 Library/ArtifactDB
 Library/SourceAssetDB
 Library/shadercompiler-UnityShaderCompiler.exe0.log
+*.csproj
+Library/ArtifactDB
+*.json
+*.log
+Library/SourceAssetDB
