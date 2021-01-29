@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GUI : MonoBehaviour
 {
+    public GameObject kraaka;
     public Slider energySlider;
     public int moralMeter;
     public float energy;
@@ -19,22 +20,18 @@ public class GUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("a"))
-        {
-            energy += 0.1f;
+
+        energy = kraaka.GetComponent<Kraakscript2>().currentEnergy / kraaka.GetComponent<Kraakscript2>().maxEnergy;
+
             if (energy > 1)
             {
                 energy = 1;
             }
-        }
-        else if (Input.GetKeyDown("b"))
-        {
-            energy -= 0.1f;
+
             if (energy < 0)
             {
                 energy = 0;
             }
-        }
 
         energySlider.value = energy;
     }
